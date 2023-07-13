@@ -1,0 +1,6 @@
+You are given a file with information about the balance of shoes in the warehouse, 
+this is an example of real unloading of balances from 1C to csv file. This file contains
+ information about the name of the shoe model, its size, remaining quantity. 
+ It is necessary to form a new file with information about models and sizes of shoes 
+ that are out of stock. To do this, implement a program that processes csv and 
+ create a new txt file with the following content.

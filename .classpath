@@ -14,5 +14,6 @@
 	<classpathentry kind="src" path="SnakesLadders/src"/>
 	<classpathentry excluding="src/main/java/" kind="src" path="SimpleSocialNet"/>
 	<classpathentry kind="src" path="SimpleSocialNet/src/main/java"/>
+	<classpathentry kind="src" path="projects2023"/>
 	<classpathentry kind="output" path="lessons/Test1/bin"/>
 </classpath>
