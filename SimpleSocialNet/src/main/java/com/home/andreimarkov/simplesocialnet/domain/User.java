@@ -3,6 +3,8 @@ package com.home.andreimarkov.simplesocialnet.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.home.andreimarkov.simplesocialnet.dao.MessageDatabase;
+
 public class User {
 	private String username;
 	private List<User> subscriptions;
@@ -38,7 +40,7 @@ public class User {
 	}
 	
 	public void sendMessage(User user, String text) {
-		
+		MessageDatabase.addNewMessage(this, user, text);
 	}
 	
 	public String toString() {
