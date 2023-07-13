@@ -1,0 +1,4 @@
+Implementation of a simple social network.
+Classes:
+User, Message, MessageDataBase
+Check operation, send messages, display a dialog or a chain of messages for two users
