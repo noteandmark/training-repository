@@ -60,18 +60,30 @@ public class App {
 //            //чтобы было правильное состояние Hibernate кэша
 //            person.getItems().forEach(i -> i.setOwner(null));
 
-            Person person = session.get(Person.class,3);
-            Item item = session.get(Item.class, 10);
+//            Person person = session.get(Person.class,3);
+//            Item item = session.get(Item.class, 10);
+//
+//            //для кэша Hibernate
+//            item.getOwner().getItems().remove(item);
+//            //порождает SQL запрос
+//            item.setOwner(person);
+//            //для кэша Hibernate
+//
+//            ---
 
-            //для кэша Hibernate
-            item.getOwner().getItems().remove(item);
-            //порождает SQL запрос
-            item.setOwner(person);
-            //для кэша Hibernate
-            person.getItems().add(item);
+            Person person = new Person("Test cascading", 30);
+
+
+            person.addItem(new Item("Item 1"));
+            person.addItem(new Item("Item 2"));
+            person.addItem(new Item("Item 3"));
+
+//            person.setItems(new ArrayList<>(Collections.singletonList(item)));
+
+//            session.persist(person);
+            session.save(person);
 
             session.getTransaction().commit();
-
         } finally {
             sessionFactory.close();
 

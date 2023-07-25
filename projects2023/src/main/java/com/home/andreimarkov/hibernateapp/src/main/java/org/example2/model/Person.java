@@ -1,5 +1,6 @@
-package org.example.model;
+package org.example2.model;
 
+import org.example.model.Item;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
@@ -21,14 +22,9 @@ public class Person {
     @Column(name = "age")
     private int age;
 
-    //если сохранять объект с помощью метода persist(), то:
-    //    @OneToMany(mappedBy = "owner", cascade = CascadeType.PERSIST)
-    //если с помощью save():
-    @OneToMany(mappedBy = "owner")
-//    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE,
-//            org.hibernate.annotations.CascadeType.REFRESH})
+    @OneToOne(mappedBy = "person")
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
-    private List<Item> items;
+    private Passport passport;
 
     public Person() {
 
@@ -37,14 +33,6 @@ public class Person {
     public Person(String name, int age) {
         this.name = name;
         this.age = age;
-    }
-
-    public List<Item> getItems() {
-        return items;
-    }
-
-    public void setItems(List<Item> items) {
-        this.items = items;
     }
 
     public int getId() {
@@ -71,12 +59,13 @@ public class Person {
         this.age = age;
     }
 
-    public void addItem(Item item) {
-        if(this.items == null)
-            this.items = new ArrayList<>();
+    public Passport getPassport() {
+        return passport;
+    }
 
-        this.items.add(item);
-        item.setOwner(this);
+    public void setPassport(Passport passport) {
+        this.passport = passport;
+        passport.setPerson(this);
     }
 
     @Override
