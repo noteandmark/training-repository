@@ -82,7 +82,6 @@ public class App {
 
 //            session.persist(person);
             session.save(person);
-
             session.getTransaction().commit();
         } finally {
             sessionFactory.close();

@@ -51,7 +51,7 @@ public class App {
 //            session.save(movie);
 //            ---
 
-            Actor actor = session.get(Actor.class,2);
+            Actor actor = session.get(Actor.class,1);
             System.out.println(actor.getMovies());
 
             Movie movietoRemove = actor.getMovies().get(0);
@@ -60,6 +60,8 @@ public class App {
             movietoRemove.getActors().remove(actor);
 
             session.getTransaction().commit();
+
+
         }
     }
 }
