@@ -1,10 +1,12 @@
 package com.home.andmark.firstrestapp.controller;
 
+import com.home.andmark.firstrestapp.dto.PersonDTO;
 import com.home.andmark.firstrestapp.model.Person;
 import com.home.andmark.firstrestapp.service.PersonService;
 import com.home.andmark.firstrestapp.util.PersonErrorResponse;
 import com.home.andmark.firstrestapp.util.PersonNotCreatedException;
 import com.home.andmark.firstrestapp.util.PersonNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,31 +15,40 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/people")
 public class PersonsController {
 
     private final PersonService personService;
+    private final ModelMapper mapper;
 
     @Autowired
-    public PersonsController(PersonService personService) {
+    public PersonsController(PersonService personService,
+                             ModelMapper mapper) {
         this.personService = personService;
+        this.mapper = mapper;
     }
 
     @GetMapping()
-    public List<Person> getPersons() {
-        return personService.findAll(); //Jackson конвертирует эти объекты в JSON
+    public List<PersonDTO> getPersons() {
+        //Jackson конвертирует эти объекты в JSON
+        return personService.findAll()
+                .stream()
+                .map(this::convertToPersonDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public Person getPerson(@PathVariable("id") int id) {
-        return personService.findOne(id);
+    public PersonDTO getPerson(@PathVariable("id") int id) {
+        return convertToPersonDTO(personService.findOne(id));
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> create(@RequestBody @Valid Person person,
+    public ResponseEntity<HttpStatus> create(@RequestBody @Valid PersonDTO personDTO,
                                              BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder errorMsg = new StringBuilder();
@@ -53,11 +64,12 @@ public class PersonsController {
 
         }
 
-        personService.save(person);
+        personService.save(convertToPerson(personDTO));
 
         //отправляем HTTP ответ с пустым телом и со стасусом 200
         return ResponseEntity.ok(HttpStatus.OK);
     }
+
 
     @ExceptionHandler
     private ResponseEntity<PersonErrorResponse> handleException(PersonNotFoundException e){
@@ -76,6 +88,14 @@ public class PersonsController {
                 System.currentTimeMillis()
         );
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    private Person convertToPerson(PersonDTO personDTO) {
+        return mapper.map(personDTO, Person.class);
+    }
+
+    private PersonDTO convertToPersonDTO(Person person) {
+        return mapper.map(person,PersonDTO.class);
     }
 
 }
