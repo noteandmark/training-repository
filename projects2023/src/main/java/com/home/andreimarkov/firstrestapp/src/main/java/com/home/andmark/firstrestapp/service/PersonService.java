@@ -2,6 +2,7 @@ package com.home.andmark.firstrestapp.service;
 
 import com.home.andmark.firstrestapp.model.Person;
 import com.home.andmark.firstrestapp.repository.PersonRepository;
+import com.home.andmark.firstrestapp.util.PersonNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,11 @@ public class PersonService {
 
     public Person findOne(int id) {
         Optional<Person> foundPerson = personRepository.findById(id);
-        return foundPerson.orElse(null);
+        return foundPerson.orElseThrow(PersonNotFoundException::new);
+    }
+
+    @Transactional
+    public void save(Person person){
+        personRepository.save(person);
     }
 }
